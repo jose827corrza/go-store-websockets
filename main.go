@@ -38,4 +38,5 @@ func main() {
 // We need to create this bind func that is requested from the method Start in package server
 func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/signup", handlers.UserHandler(s)).Methods(http.MethodPost)
 }

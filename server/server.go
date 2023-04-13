@@ -8,6 +8,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jose827corrza/go-store-websockets/database"
+	"github.com/jose827corrza/go-store-websockets/repository"
 )
 
 type Config struct {
@@ -52,8 +54,13 @@ func NewServer(ctx context.Context, config *Config) (*Broker, error) {
 func (b *Broker) Run(binder func(s Server, r *mux.Router)) {
 	b.router = mux.NewRouter()
 	binder(b, b.router) // Receives b because Broker accomplishes the Server interface
+	repo, err := database.NewPostgresRepository(b.Config().DBURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	repository.SetRepository(repo)
 	fmt.Println("Starting the server at port", b.Config().Port)
-	err := http.ListenAndServe(b.config.Port, b.router)
+	err = http.ListenAndServe(b.config.Port, b.router)
 	if err != nil {
 		log.Println("Error starting the server")
 	} else {
