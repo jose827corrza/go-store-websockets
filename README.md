@@ -41,4 +41,4 @@ To build the docker image, move to database folder and run the following command
 
 Next to it, to start the container, 
 
-> docker run -p 54321:5432
+> docker run -p 54321:5432 go-estore-websockets
