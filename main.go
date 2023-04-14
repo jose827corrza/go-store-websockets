@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/jose827corrza/go-store-websockets/handlers"
+	"github.com/jose827corrza/go-store-websockets/middlewares"
 	"github.com/jose827corrza/go-store-websockets/server"
 )
 
@@ -37,6 +38,7 @@ func main() {
 
 // We need to create this bind func that is requested from the method Start in package server
 func BindRoutes(s server.Server, r *mux.Router) {
-	r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/signup", handlers.UserHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/", middlewares.LogginMiddleware(handlers.HomeHandler(s))).Methods(http.MethodGet)
+	// r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/signup", middlewares.LogginMiddleware(handlers.UserHandler(s))).Methods(http.MethodPost)
 }

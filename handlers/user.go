@@ -12,16 +12,16 @@ import (
 )
 
 // NORMAL
-// type SignUpUserRequest struct {
-// 	Email    string `json:"email"`
-// 	Password string `json:"password"`
-// }
+type SignUpUserRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 
 // USING VALIDATE
-type SignUpUserRequest struct {
-	Email    string `validate:"required"`
-	Password string `validate:"required"`
-}
+// type SignUpUserRequest struct {
+// 	Email    string `validate:"required"`
+// 	Password string `validate:"required"`
+// }
 
 type SignUpUserResponse struct {
 	Id    string `json:"id"`
