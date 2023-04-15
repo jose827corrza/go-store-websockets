@@ -5,55 +5,50 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/jose827corrza/go-store-websockets/dtos"
 	"github.com/jose827corrza/go-store-websockets/models"
 	"github.com/jose827corrza/go-store-websockets/repository"
 	"github.com/jose827corrza/go-store-websockets/server"
+	"github.com/jose827corrza/go-store-websockets/utils"
+	"github.com/jose827corrza/go-store-websockets/validators"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// NORMAL
-type SignUpUserRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-// USING VALIDATE
-// type SignUpUserRequest struct {
-// 	Email    string `validate:"required"`
-// 	Password string `validate:"required"`
-// }
-
-type SignUpUserResponse struct {
-	Id    string `json:"id"`
-	Email string `json:"email"`
-}
-
 func UserHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var request SignUpUserRequest
+		var request dtos.SignUpUserRequest
 
-		err := json.NewDecoder(r.Body).Decode(&request)
+		// Validation
+		err := validators.ValidateSignUp(&request, w, r)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			utils.ErrorResponse(400, err.Error(), w)
+			return
 		}
+
+		// New uuid gen
 		id := uuid.New()
 		hashedPsswrd, err := bcrypt.GenerateFromPassword([]byte(request.Password), 10)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+
+		// Struct formation to be send to the repository
 		var user = models.User{
 			Id:       id.String(),
 			Email:    request.Email,
 			Password: string(hashedPsswrd),
-			// Password: request.Password,
 		}
+
+		//Insert using repository
 		err = repository.InsertUser(r.Context(), &user)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+
+		//Writting a successful insert
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(SignUpUserResponse{
+		json.NewEncoder(w).Encode(dtos.SignUpUserResponse{
 			Id:    id.String(),
 			Email: user.Email,
 		})

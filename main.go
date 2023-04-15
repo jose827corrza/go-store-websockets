@@ -40,5 +40,6 @@ func main() {
 func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/", middlewares.LogginMiddleware(handlers.HomeHandler(s))).Methods(http.MethodGet)
 	// r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/signup", middlewares.LogginMiddleware(handlers.UserHandler(s))).Methods(http.MethodPost)
+	// r.HandleFunc("/signup", middlewares.LogginMiddleware(handlers.UserHandler(s))).Methods(http.MethodPost)
+	r.HandleFunc("/signup", middlewares.SignUpValidator(handlers.UserHandler(s))).Methods(http.MethodPost)
 }
