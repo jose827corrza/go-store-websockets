@@ -3,12 +3,15 @@ package repository
 import (
 	"context"
 
+	"github.com/jose827corrza/go-store-websockets/dtos"
 	"github.com/jose827corrza/go-store-websockets/models"
 )
 
 type UserRepository interface {
 	InsertUser(ctx context.Context, user *models.User) error
-	GetUserById(ctx context.Context, usedId string) (*models.User, error)
+	GetUserById(ctx context.Context, usedId string) (*dtos.SignUpUserResponse, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
+	GetAllUsers(ctx context.Context) ([]*dtos.SignUpUserResponse, error)
 	Close() error
 }
 
@@ -25,8 +28,15 @@ func InsertUser(ctx context.Context, user *models.User) error {
 	return implementation.InsertUser(ctx, user)
 }
 
-func GetUserById(ctx context.Context, usedId string) (*models.User, error) {
+func GetUserById(ctx context.Context, usedId string) (*dtos.SignUpUserResponse, error) {
 	return implementation.GetUserById(ctx, usedId)
+}
+func GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	return implementation.GetUserByEmail(ctx, email)
+}
+
+func GetAllUsers(ctx context.Context) ([]*dtos.SignUpUserResponse, error) {
+	return implementation.GetAllUsers(ctx)
 }
 
 func Close() error {

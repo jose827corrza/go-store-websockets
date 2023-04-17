@@ -4,5 +4,6 @@ CREATE TABLE users (
     id VARCHAR(64) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
+    role VARCHAR(60) DEFAULT customer,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -23,7 +24,7 @@ func SuccessResponse(fields map[string]interface{}, writer http.ResponseWriter) 
 func ErrorResponse(statusCode int, error string, writer http.ResponseWriter) {
 	//Create a new map and fill it
 	fields := make(map[string]interface{})
-	fields["status"] = "error"
+	fields["status"] = fmt.Sprintf("%d", statusCode)
 	fields["message"] = error
 	message, err := json.Marshal(fields)
 
