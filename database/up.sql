@@ -7,3 +7,35 @@ CREATE TABLE users (
     role VARCHAR(60) DEFAULT customer,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+DROP TABLE IF EXISTS brands;
+
+CREATE TABLE brands(
+    id VARCHAR(64) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    create_at TIMESTAMP NOT NULL DEFAULT NOW(),
+);
+
+DROP TABLE IF EXISTS categories;
+
+CREATE TABLE categories (
+    id VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+);
+
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE products(
+    id VARCHAR(64) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price FLOAT NOT NULL,
+    stock INT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    brand_id VARCHAR(255) NOT NULL REFERENCES brands(id)
+    category_id VARCHAR(255) NOT NULL REFERENCES categories(id)
+);

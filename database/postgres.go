@@ -106,3 +106,37 @@ func (repo *PostgresRepository) GetAllUsers(ctx context.Context) ([]*dtos.SignUp
 func (repo *PostgresRepository) Close() error {
 	return repo.DB.Close()
 }
+
+func (repo *PostgresRepository) InsertBrand(ctx context.Context, user *models.Brand) error {
+	_, err := repo.DB.ExecContext(ctx, "INSERT INTO brands (id,name, image) VALUES ($1, $2, $3)", user.Id, user.Name, user.Image)
+	return err
+}
+
+func (repo *PostgresRepository) GetAllUBrands(ctx context.Context) ([]*models.Brand, error) {
+	// var users []*models.User
+	var brands []*models.Brand
+
+	rows, err := repo.DB.QueryContext(ctx, "SELECT id, name, image FROM brands")
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	for rows.Next() {
+		// var user = models.User{}
+		var brand = models.Brand{}
+		if err = rows.Scan(&brand.Id, &brand.Name, &brand.Image); err == nil {
+			brands = append(brands, &brand)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return brands, nil
+}

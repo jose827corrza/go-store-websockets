@@ -8,10 +8,16 @@ import (
 )
 
 type UserRepository interface {
+	//Users
 	InsertUser(ctx context.Context, user *models.User) error
 	GetUserById(ctx context.Context, usedId string) (*dtos.SignUpUserResponse, error)
 	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
 	GetAllUsers(ctx context.Context) ([]*dtos.SignUpUserResponse, error)
+
+	//Brands
+	InsertBrand(ctx context.Context, brand *models.Brand) error
+	GetAllUBrands(ctx context.Context) ([]*models.Brand, error)
+
 	Close() error
 }
 
@@ -37,6 +43,14 @@ func GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 
 func GetAllUsers(ctx context.Context) ([]*dtos.SignUpUserResponse, error) {
 	return implementation.GetAllUsers(ctx)
+}
+
+func InsertBrand(ctx context.Context, brand *models.Brand) error {
+	return implementation.InsertBrand(ctx, brand)
+}
+
+func GetAllUBrands(ctx context.Context) ([]*models.Brand, error) {
+	return implementation.GetAllUBrands(ctx)
 }
 
 func Close() error {
