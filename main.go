@@ -38,6 +38,10 @@ func main() {
 
 // We need to create this bind func that is requested from the method Start in package server
 func BindRoutes(s server.Server, r *mux.Router) {
+
+	// This middleware with be implemented on every path of the server
+	r.Use(middlewares.CheckAuthMiddleware(s))
+
 	r.HandleFunc("/", middlewares.LogginMiddleware(handlers.HomeHandler(s))).Methods(http.MethodGet)
 	// r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
 	// r.HandleFunc("/signup", middlewares.LogginMiddleware(handlers.UserHandler(s))).Methods(http.MethodPost)
@@ -45,4 +49,5 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/login", handlers.LoginHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/users/{userId}", handlers.UserHandlerGetById(s)).Methods(http.MethodGet)
 	r.HandleFunc("/users", handlers.UserHandlerGetAll(s)).Methods(http.MethodGet)
+	r.HandleFunc("/me", handlers.MeHandler(s)).Methods(http.MethodGet)
 }
