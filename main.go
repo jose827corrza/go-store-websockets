@@ -23,10 +23,21 @@ func main() {
 	JWT_SECRET := os.Getenv("JWT_SECRET")
 	DB_URL := os.Getenv("DB_URL")
 
+	DB_HOST := os.Getenv("DB_HOST")
+	DB_PORT := os.Getenv("DB_PORT")
+	DB_PSSWD := os.Getenv("DB_PSSWD")
+	DB_USER := os.Getenv("DB_USER")
+	DB_NAME := os.Getenv("DB_NAME")
+
 	s, err := server.NewServer(context.Background(), &server.Config{
 		Port:      PORT,
 		JWTSecret: JWT_SECRET,
 		DBURL:     DB_URL,
+		Db_HOST:   DB_HOST,
+		Db_PORT:   DB_PORT,
+		Db_PSSWD:  DB_PSSWD,
+		Db_USER:   DB_USER,
+		Db_NAME:   DB_NAME,
 	})
 
 	if err != nil {
@@ -40,7 +51,7 @@ func main() {
 func BindRoutes(s server.Server, r *mux.Router) {
 
 	// This middleware with be implemented on every path of the server
-	r.Use(middlewares.CheckAuthMiddleware(s))
+	// r.Use(middlewares.CheckAuthMiddleware(s))
 
 	r.HandleFunc("/", middlewares.LogginMiddleware(handlers.HomeHandler(s))).Methods(http.MethodGet)
 	// r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
@@ -50,4 +61,6 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/users/{userId}", handlers.UserHandlerGetById(s)).Methods(http.MethodGet)
 	r.HandleFunc("/users", handlers.UserHandlerGetAll(s)).Methods(http.MethodGet)
 	r.HandleFunc("/me", handlers.MeHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/brands", handlers.InsertNewBrand(s)).Methods(http.MethodPost)
+	r.HandleFunc("/products", handlers.InsertProductHandler(s)).Methods(http.MethodPost)
 }

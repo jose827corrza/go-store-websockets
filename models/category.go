@@ -1,11 +1,10 @@
 package models
 
-import "time"
+import "gorm.io/gorm"
 
 type Category struct {
-	Id        string    `json:"id,omitempty"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	Products  []Product `json:"products"`
+	gorm.Model
+	Id       string    `json:"id,omitempty"`
+	Name     string    `json:"name"`
+	Products []Product `json:"products"`
 }

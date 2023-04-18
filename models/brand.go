@@ -1,12 +1,11 @@
 package models
 
-import "time"
+import "gorm.io/gorm"
 
 type Brand struct {
-	Id        string    `json:"id,omitempty"`
-	Name      string    `json:"name"`
-	Image     string    `json:"image"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	Products  []Product `json:"products"`
+	gorm.Model
+	Id       string    `json:"id,omitempty"`
+	Name     string    `json:"name"`
+	Image    string    `json:"image"`
+	Products []Product `json:"products"`
 }

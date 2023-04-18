@@ -18,6 +18,9 @@ type UserRepository interface {
 	InsertBrand(ctx context.Context, brand *models.Brand) error
 	GetAllUBrands(ctx context.Context) ([]*models.Brand, error)
 
+	//Products
+	InsertProduct(ctx context.Context, product *models.Product) error
+
 	Close() error
 }
 
@@ -51,6 +54,10 @@ func InsertBrand(ctx context.Context, brand *models.Brand) error {
 
 func GetAllUBrands(ctx context.Context) ([]*models.Brand, error) {
 	return implementation.GetAllUBrands(ctx)
+}
+
+func InsertProduct(ctx context.Context, product *models.Product) error {
+	return implementation.InsertProduct(ctx, product)
 }
 
 func Close() error {

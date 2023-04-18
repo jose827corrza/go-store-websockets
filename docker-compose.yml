@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
   postgres:
-    # image: postgres:13
-    build: database/
+    image: postgres:13
+    # build: database/
     ports:
       - "5432:5432"
     env_file:
