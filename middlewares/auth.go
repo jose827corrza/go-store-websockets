@@ -15,12 +15,19 @@ var (
 	NO_AUTH_NEED = []string{
 		"login",
 		"signup",
+		"categories",
+		"brands",
+		"products",
+		"users",
 	}
 )
 
-func shouldCheckToken(path string) bool {
+func shouldCheckToken(path string, method string) bool {
 	for _, p := range NO_AUTH_NEED {
 		if strings.Contains(path, p) {
+			// if method == "POST" {
+			// 	return true
+			// }
 			return false
 		}
 	}
@@ -30,7 +37,7 @@ func shouldCheckToken(path string) bool {
 func CheckAuthMiddleware(s server.Server) func(h http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if !shouldCheckToken(r.URL.Path) {
+			if !shouldCheckToken(r.URL.Path, r.Method) {
 				next.ServeHTTP(w, r)
 				return
 			}

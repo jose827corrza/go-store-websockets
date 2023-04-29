@@ -8,9 +8,7 @@ import (
 	"github.com/jose827corrza/go-store-websockets/dtos"
 )
 
-var Validate *validator.Validate
-
-func ValidateSignUp(structure *dtos.SignUpUserRequest, w http.ResponseWriter, r *http.Request) error {
+func ValidateCreateNewProduct(structure *dtos.ProductRequest, w http.ResponseWriter, r *http.Request) error {
 	Validate = validator.New()
 
 	err := json.NewDecoder(r.Body).Decode(&structure)

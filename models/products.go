@@ -13,4 +13,5 @@ type Product struct {
 	Stock       int     `json:"stock"`
 	Image       string  `json:"image"`
 	BrandID     string  `json:"brand"`
+	CategoryID  string  `json:"category"`
 }

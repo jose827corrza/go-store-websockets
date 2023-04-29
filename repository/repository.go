@@ -17,9 +17,21 @@ type UserRepository interface {
 	//Brands
 	InsertBrand(ctx context.Context, brand *models.Brand) error
 	GetAllUBrands(ctx context.Context) ([]*models.Brand, error)
+	GetAllProductsByBrand(ctx context.Context, brandId string) (*models.Brand, error)
 
 	//Products
 	InsertProduct(ctx context.Context, product *models.Product) error
+	GetAllProducts(ctx context.Context) ([]*models.Product, error)
+	GetAProduct(ctx context.Context, productId string) (*models.Product, error)
+	UpdateAProduct(ctx context.Context, productId string, product *models.Product) (*models.Product, error)
+	DeleteAProduct(ctx context.Context, productId string) error
+	//Customer
+	InsertCustomer(ctx context.Context, customer *models.Customer) error
+
+	// Category
+	InsertCategory(ctx context.Context, category *models.Category) error
+	GetAllProductsByCategory(ctx context.Context, categoryId string) (*models.Category, error)
+	GetAllCategories(ctx context.Context) ([]*models.Category, error)
 
 	Close() error
 }
@@ -56,8 +68,44 @@ func GetAllUBrands(ctx context.Context) ([]*models.Brand, error) {
 	return implementation.GetAllUBrands(ctx)
 }
 
+func GetAllProductsByBrand(ctx context.Context, brandId string) (*models.Brand, error) {
+	return implementation.GetAllProductsByBrand(ctx, brandId)
+}
+
 func InsertProduct(ctx context.Context, product *models.Product) error {
 	return implementation.InsertProduct(ctx, product)
+}
+
+func GetAllProducts(ctx context.Context) ([]*models.Product, error) {
+	return implementation.GetAllProducts(ctx)
+}
+
+func GetAProduct(ctx context.Context, productId string) (*models.Product, error) {
+	return implementation.GetAProduct(ctx, productId)
+}
+
+func UpdateAProduct(ctx context.Context, productId string, product *models.Product) (*models.Product, error) {
+	return implementation.UpdateAProduct(ctx, productId, product)
+}
+
+func DeleteAProduct(ctx context.Context, productId string) error {
+	return implementation.DeleteAProduct(ctx, productId)
+}
+
+func InsertCustomer(ctx context.Context, customer *models.Customer) error {
+	return implementation.InsertCustomer(ctx, customer)
+}
+
+func InsertCategory(ctx context.Context, category *models.Category) error {
+	return implementation.InsertCategory(ctx, category)
+}
+
+func GetAllProductsByCategory(ctx context.Context, categoryId string) (*models.Category, error) {
+	return implementation.GetAllProductsByCategory(ctx, categoryId)
+}
+
+func GetAllCategories(ctx context.Context) ([]*models.Category, error) {
+	return implementation.GetAllCategories(ctx)
 }
 
 func Close() error {

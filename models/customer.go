@@ -1,10 +1,11 @@
 package models
 
+import "gorm.io/gorm"
+
 type Customer struct {
-	Id        string `json:"id"`
-	Name      string `json:"name"`
-	LastName  string `json:"lastName"`
-	Phone     string `json:"phone"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	gorm.Model
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	LastName string `json:"lastName"`
+	Phone    string `json:"phone"`
 }

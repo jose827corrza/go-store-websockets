@@ -2,19 +2,18 @@ package validators
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jose827corrza/go-store-websockets/dtos"
 )
 
-var Validate *validator.Validate
-
-func ValidateSignUp(structure *dtos.SignUpUserRequest, w http.ResponseWriter, r *http.Request) error {
+func ValidateBrand(structure *dtos.BrandRequest, w http.ResponseWriter, r *http.Request) error {
 	Validate = validator.New()
-
+	// var test dtos.BrandRequest
 	err := json.NewDecoder(r.Body).Decode(&structure)
-
+	log.Print(structure)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
