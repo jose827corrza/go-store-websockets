@@ -41,6 +41,7 @@ func UserHandlerInsert(s server.Server) http.HandlerFunc {
 			Id:       id.String(),
 			Email:    request.Email,
 			Password: string(hashedPsswrd),
+			Role:     "administrator",
 		}
 
 		//Insert using repository
@@ -118,6 +119,7 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 		// - Has the right credentials
 		claims := models.AppClaims{
 			UserId: user.Id,
+			Role:   user.Role,
 			RegisteredClaims: jwt.RegisteredClaims{
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * time.Hour)),
 			},

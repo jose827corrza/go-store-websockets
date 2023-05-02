@@ -51,7 +51,7 @@ func main() {
 func BindRoutes(s server.Server, r *mux.Router) {
 
 	// This middleware with be implemented on every path of the server
-	// r.Use(middlewares.CheckAuthMiddleware(s)) //TODO -> check
+	r.Use(middlewares.CheckAuthMiddleware(s)) //TODO -> check
 
 	r.HandleFunc("/", middlewares.LogginMiddleware(handlers.HomeHandler(s))).Methods(http.MethodGet)
 	// r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
@@ -59,15 +59,15 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/signup", middlewares.SignUpValidator(handlers.UserHandlerInsert(s))).Methods(http.MethodPost)
 	r.HandleFunc("/login", handlers.LoginHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/users/{userId}", handlers.UserHandlerGetById(s)).Methods(http.MethodGet)
-	r.HandleFunc("/users", handlers.UserHandlerGetAll(s)).Methods(http.MethodGet)
+	r.HandleFunc("/users", handlers.UserHandlerGetAll(s)).Methods(http.MethodGet) // <- TODO
 	r.HandleFunc("/me", handlers.MeHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/brands", handlers.InsertNewBrand(s)).Methods(http.MethodPost)
+	r.HandleFunc("/brands/create", handlers.InsertNewBrand(s)).Methods(http.MethodPost)
 	r.HandleFunc("/brands/{brandId}", handlers.GetAllProductsByBrandHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/products", handlers.InsertProductHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/products/create", handlers.InsertProductHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/products", handlers.GetAllProductsHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/products/{productId}", handlers.UpdateAProductHandler(s)).Methods(http.MethodPut)
 	r.HandleFunc("/products/{productId}", handlers.DeleteAProductHandler(s)).Methods(http.MethodDelete)
-	r.HandleFunc("/categories", handlers.InsertNewCategory(s)).Methods(http.MethodPost)
+	r.HandleFunc("/categories/create", handlers.InsertNewCategory(s)).Methods(http.MethodPost)
 	r.HandleFunc("/categories", handlers.GetAllCategories(s)).Methods(http.MethodGet)
 	r.HandleFunc("/categories/{categoryId}", handlers.GetProductsByCategory(s)).Methods(http.MethodGet)
 }

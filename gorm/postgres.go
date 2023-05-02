@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jose827corrza/go-store-websockets/dtos"
 	"github.com/jose827corrza/go-store-websockets/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -39,13 +38,15 @@ func (repo *PostgresRepository) AutoDbUpdate() {
 
 // Receiver functions are the "methods" of the "class" alias struct
 func (repo *PostgresRepository) InsertUser(ctx context.Context, user *models.User) error {
-	result := repo.DB.Create(&models.User{Email: user.Email, Password: user.Password, Id: user.Id})
+	result := repo.DB.Create(&models.User{Email: user.Email, Password: user.Password, Id: user.Id, Role: user.Role})
 	return result.Error
 }
 
-func (repo *PostgresRepository) GetUserById(ctx context.Context, userId string) (*dtos.SignUpUserResponse, error) {
-	var user = dtos.SignUpUserResponse{}
-	result := repo.DB.Where("id = ?", user.Id).First(&user)
+func (repo *PostgresRepository) GetUserById(ctx context.Context, userId string) (*models.User, error) {
+	var user = models.User{}
+	// result := repo.DB.Where("id = ?", userId).First(&user)
+
+	result := repo.DB.Select("id", "email", "role").Where("id = ?", userId).First(&user)
 	return &user, result.Error
 }
 
@@ -55,9 +56,13 @@ func (repo *PostgresRepository) GetUserByEmail(ctx context.Context, email string
 	return &user, result.Error
 }
 
-func (repo *PostgresRepository) GetAllUsers(ctx context.Context) ([]*dtos.SignUpUserResponse, error) {
-	var users []*dtos.SignUpUserResponse
-	result := repo.DB.Find(&users)
+func (repo *PostgresRepository) GetAllUsers(ctx context.Context) ([]*models.User, error) {
+	var users []*models.User
+	//Thiw way retrieve all the values.
+	// result := repo.DB.Find(&users)
+
+	//Otherwise, this let us select which columns we want to obtain
+	result := repo.DB.Select("id", "email", "role").Find(&users)
 	return users, result.Error
 }
 

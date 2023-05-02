@@ -1,11 +1,13 @@
 package middlewares
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/jose827corrza/go-store-websockets/models"
+	"github.com/jose827corrza/go-store-websockets/repository"
 	"github.com/jose827corrza/go-store-websockets/server"
 	"github.com/jose827corrza/go-store-websockets/utils"
 )
@@ -19,17 +21,31 @@ var (
 		"brands",
 		"products",
 		"users",
+		"",
 	}
 )
 
 func shouldCheckToken(path string, method string) bool {
 	for _, p := range NO_AUTH_NEED {
 		if strings.Contains(path, p) {
-			// if method == "POST" {
-			// 	return true
-			// }
+			if method == "PUT" {
+				return true
+			}
+			if method == "POST" && strings.Contains(path, "create") {
+				return true
+			}
 			return false
 		}
+	}
+	return true
+}
+
+func AdminPriviledges(method string, role string) bool {
+	if method == "POST" || method == "PUT" {
+		if role != "administrator" {
+			return false
+		}
+		return true
 	}
 	return true
 }
@@ -42,13 +58,26 @@ func CheckAuthMiddleware(s server.Server) func(h http.Handler) http.Handler {
 				return
 			}
 			tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
-			_, err := jwt.ParseWithClaims(tokenString, &models.AppClaims{}, func(token *jwt.Token) (interface{}, error) {
+			token, err := jwt.ParseWithClaims(tokenString, &models.AppClaims{}, func(token *jwt.Token) (interface{}, error) {
 				return []byte(s.Config().JWTSecret), nil
 			})
 			if err != nil {
 				utils.ErrorResponse(401, err.Error(), w)
 				// http.Error(w, err.Error(), http.StatusUnauthorized)
 				return
+			}
+			if claims, ok := token.Claims.(*models.AppClaims); ok && token.Valid {
+				user, err := repository.GetUserById(r.Context(), claims.UserId)
+				if err != nil {
+					utils.ErrorResponse(500, err.Error(), w)
+					return
+				}
+				log.Print(user)
+				if !AdminPriviledges(r.Method, claims.Role) {
+					// next.ServeHTTP(w, r)
+					utils.ErrorResponse(401, err.Error(), w)
+					return
+				}
 			}
 			next.ServeHTTP(w, r)
 		})

@@ -6,7 +6,7 @@ type User struct {
 	gorm.Model
 	Id       string `json:"id,omitempty"`
 	Email    string `json:"email"`
-	Password string `json:"password"`
+	Password string `json:"password,omitempty"`
 	Role     string `json:"role"`
 	// CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt time.Time `json:"updated_at,omitempty"`
