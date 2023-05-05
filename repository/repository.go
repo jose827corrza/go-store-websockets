@@ -32,6 +32,12 @@ type UserRepository interface {
 	GetAllProductsByCategory(ctx context.Context, categoryId string) (*models.Category, error)
 	GetAllCategories(ctx context.Context) ([]*models.Category, error)
 
+	//Order
+	CreateAnOrder(ctx context.Context, order *models.Order) error
+	GetOrdersByCustomerId(ctx context.Context, customerId string) (*models.Customer, error)
+	AddAProductToAnOrder(ctx context.Context, orderId string, productId string, orderItemId string) error
+	GetOrderById(ctx context.Context, orderId string) (*models.Order, error)
+
 	Close() error
 }
 
@@ -105,6 +111,22 @@ func GetAllProductsByCategory(ctx context.Context, categoryId string) (*models.C
 
 func GetAllCategories(ctx context.Context) ([]*models.Category, error) {
 	return implementation.GetAllCategories(ctx)
+}
+
+func CreateAnOrder(ctx context.Context, order *models.Order) error {
+	return implementation.CreateAnOrder(ctx, order)
+}
+
+func GetOrdersByCustomerId(ctx context.Context, customerId string) (*models.Customer, error) {
+	return implementation.GetOrdersByCustomerId(ctx, customerId)
+}
+
+func AddAProductToAnOrder(ctx context.Context, orderId string, productId string, orderItemId string) error {
+	return implementation.AddAProductToAnOrder(ctx, orderId, productId, orderItemId)
+}
+
+func GetOrderById(ctx context.Context, orderId string) (*models.Order, error) {
+	return implementation.GetOrderById(ctx, orderId)
 }
 
 func Close() error {

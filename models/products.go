@@ -14,4 +14,6 @@ type Product struct {
 	Image       string  `json:"image"`
 	BrandID     string  `json:"brand"`
 	CategoryID  string  `json:"category"`
+	// CustomerID uint
+	OrderID string //Foreign key for order model
 }

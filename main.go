@@ -70,4 +70,9 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/categories/create", handlers.InsertNewCategory(s)).Methods(http.MethodPost)
 	r.HandleFunc("/categories", handlers.GetAllCategories(s)).Methods(http.MethodGet)
 	r.HandleFunc("/categories/{categoryId}", handlers.GetProductsByCategory(s)).Methods(http.MethodGet)
+	r.HandleFunc("/customers", handlers.CreateNewCustomerHanlder(s)).Methods(http.MethodPost)
+	r.HandleFunc("/orders", handlers.CreateAnOrderHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/orders/{customerId}", handlers.GetOrdersByCustomerIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/orders/add-item", handlers.AddAProductToAnOrderHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/orders/items/{orderId}", handlers.GetOrderByIdHandler(s)).Methods(http.MethodGet)
 }

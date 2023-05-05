@@ -34,7 +34,9 @@ func InsertNewBrand(s server.Server) http.HandlerFunc {
 
 		err = repository.InsertBrand(r.Context(), &brand)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			// http.Error(w, err.Error(), http.StatusInternalServerError)
+			utils.ErrorResponse(500, err.Error(), w)
+			return
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)

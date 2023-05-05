@@ -33,52 +33,13 @@ func (repo *PostgresRepository) AutoDbUpdate() {
 		&models.Brand{},
 		&models.Product{},
 		&models.Customer{},
+		&models.OrderItem{},
+		&models.Order{},
 	)
-}
-
-// Receiver functions are the "methods" of the "class" alias struct
-func (repo *PostgresRepository) InsertUser(ctx context.Context, user *models.User) error {
-	result := repo.DB.Create(&models.User{Email: user.Email, Password: user.Password, Id: user.Id, Role: user.Role})
-	return result.Error
-}
-
-func (repo *PostgresRepository) GetUserById(ctx context.Context, userId string) (*models.User, error) {
-	var user = models.User{}
-	// result := repo.DB.Where("id = ?", userId).First(&user)
-
-	result := repo.DB.Select("id", "email", "role").Where("id = ?", userId).First(&user)
-	return &user, result.Error
-}
-
-func (repo *PostgresRepository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
-	var user = models.User{}
-	result := repo.DB.Where("email=?", email).First(&user)
-	return &user, result.Error
-}
-
-func (repo *PostgresRepository) GetAllUsers(ctx context.Context) ([]*models.User, error) {
-	var users []*models.User
-	//Thiw way retrieve all the values.
-	// result := repo.DB.Find(&users)
-
-	//Otherwise, this let us select which columns we want to obtain
-	result := repo.DB.Select("id", "email", "role").Find(&users)
-	return users, result.Error
 }
 
 func (repo *PostgresRepository) Close() error {
 	return nil
-}
-
-func (repo *PostgresRepository) InsertBrand(ctx context.Context, user *models.Brand) error {
-	result := repo.DB.Create(&models.Brand{Name: user.Name, Image: user.Image, Id: user.Id})
-	return result.Error
-}
-
-func (repo *PostgresRepository) GetAllUBrands(ctx context.Context) ([]*models.Brand, error) {
-	var brands []*models.Brand
-	err := repo.DB.Model(&models.Brand{}).Preload("Products").Find(&brands).Error
-	return brands, err
 }
 
 func (repo *PostgresRepository) GetAllProductsByBrand(ctx context.Context, brandId string) (*models.Brand, error) {
@@ -142,26 +103,6 @@ func (repo *PostgresRepository) DeleteAProduct(ctx context.Context, productId st
 	return nil
 }
 
-func (repo *PostgresRepository) InsertCustomer(ctx context.Context, customer *models.Customer) error {
-	result := repo.DB.Create(&models.Customer{
-		Id:       customer.Id,
-		Name:     customer.Name,
-		LastName: customer.LastName,
-		Phone:    customer.Phone,
-	})
-	return result.Error
-}
-
-func (repo *PostgresRepository) InsertCategory(ctx context.Context, category *models.Category) error {
-	result := repo.DB.Create(&models.Category{
-		Id:    category.Id,
-		Name:  category.Name,
-		Image: category.Image,
-	})
-
-	return result.Error
-}
-
 func (repo *PostgresRepository) GetAllProductsByCategory(ctx context.Context, categoryId string) (*models.Category, error) {
 	var category *models.Category
 
@@ -172,11 +113,4 @@ func (repo *PostgresRepository) GetAllProductsByCategory(ctx context.Context, ca
 	log.Printf("from DB")
 	log.Print(category)
 	return category, nil
-}
-
-func (repo *PostgresRepository) GetAllCategories(ctx context.Context) ([]*models.Category, error) {
-	var categories []*models.Category
-
-	result := repo.DB.Find(&categories)
-	return categories, result.Error
 }

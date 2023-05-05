@@ -21,6 +21,7 @@ var (
 		"brands",
 		"products",
 		"users",
+		"customers",
 		"",
 	}
 )
