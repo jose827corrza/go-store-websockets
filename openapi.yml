@@ -1,0 +1,410 @@
+openapi: 3.0.3
+info:
+  title: Node Websockets - OpenAPI 3.0
+  description: A simple instant message app using NodeJS. all the information is stored in a MongoDB database, for live messaging a websocket is used.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: jose.corrzadeveloper@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 0.0.1
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://node-websocket-production-3ece.up.railway.app
+tags:
+  - name: User
+    description: Related to users.
+  - name: Message
+    description: Related to messages
+
+paths:
+  /user:
+    post:
+      tags:
+      - User
+      summary: Creates an user
+      description: Sends the name of the new user, and will obtain the name besides the user's id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResponse' 
+          
+    get:
+      tags:
+      - User
+      summary: Gets all the users
+      description: Returns all the users in the database
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userResponse'
+  /message:
+    post:
+      tags:
+      - Message
+      summary: Send a message
+      description: POst a new message to be deliver to other user, it can also upload an image using a form-data request.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadImage'
+      responses:
+        '201':
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageResponse'
+    get:
+      tags:
+      - Message
+      summary: Get messages
+      description: returns all the messages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getMessages'
+  /message/{id}:
+    delete:
+      tags:
+      - Message
+      summary: Delete a message
+      description: Erases a selected message from the database with its id.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Message id that wants to be deleted
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK, message deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageDeleteResponse'
+    patch:
+      tags:
+      - Message
+      summary: Update a message
+      description: Update a specific message in the database
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Chat id
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateMessage'
+      responses:
+        '200':
+          description: OK
+  /chat:
+    post:
+      tags:
+      - Message
+      summary: Create a chat
+      description: Defines a new chat, which initially will be conformed by two users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createChat'
+      responses:
+        '201':
+          description: OK, chat created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createChatResponse'
+  /chat/{id}:
+    get:
+      tags:
+      - Message
+      summary: Get chat of the user
+      description: Returns the chats that the specified user has
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK, chats of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatsUser'
+components:
+  schemas:
+    chatsUser:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+          description: Error if is throw
+        body: 
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: 63bf80dcdc04a0039942c83a
+                description: Unique id of the chat in the database
+              __v: 
+                type: number
+                example: 0
+              users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    
+                    users:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 63bf80dcdc04a0039942c83a
+                          description: Unique id of the user which has the chat in the database
+                        name:
+                          type: string
+                          example: Pepe
+                          description: User's name in the database
+                        __v: 
+                          type: number
+                          example: 0
+    createChatResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+          description: Error if is throw
+        body: 
+          type: object
+          properties:
+            users:
+              type: array
+              items: 
+                type: string
+                example: 62be3faaf5252be57363a201
+        _id:
+              type: string
+              example: 63bf80dcdc04a0039942c83a
+              description: Unique id of the chat in the database
+        __v: 
+          type: number
+          example: 0
+    createChat:
+      type: object
+      properties:
+        users:
+          type: array
+          items: 
+            type: string
+            example: 62be3faaf5252be57363a201
+    uploadImage:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+          description: Fila that will be uploaded
+        user:
+          type: string
+          description: User who uploads the file
+        chat:
+          type: string
+          description: Chat which the user whant to upload the file
+        message:
+          type: string
+          description: Additional message to be send together to the file
+    updateMessage:
+      type: object
+      properties:
+        chat:
+          type: string
+        user:
+          type: string
+        message:
+          type: string
+    getMessages:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+          description: Error if is throw
+        body:
+          type: array
+          items:
+            properties:
+              _id:
+                type: string
+                description: Unique id of the message in the database
+                example: 63c0e039dc04a0039942c83e
+              chat:
+                type: string
+                example: 62be409df5252be57363a213
+                description: ID of the created chat which want to be send the message
+              user:
+                type: string
+                example: 62be3fa1f5252be57363a1ff
+                description: User who sends the message
+              message:
+                type: string
+                example: De Jose a Denise
+                description: Body of the message
+              date:
+                type: string
+                example: 2023-01-13T04:38:17.338Z
+                description: Date when the message was created
+              file:
+                type: string
+                example: ""
+                description: Name of the file uploaded, If a file was uploaded
+              __v: 
+                type: number
+                example: 0
+    messageDeleteResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+          description: Error if is throw
+        body: 
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 63bf80dcdc04a0039942c83a
+              description: Unique id of the message erased in the database
+            __v: 
+              type: number
+              example: 0
+            chat:
+              type: string
+              example: 62be409df5252be57363a213
+              description: ID of the created chat which want to be send the message
+            user:
+              type: string
+              example: 62be3fa1f5252be57363a1ff
+              description: User who sends the message
+            message:
+              type: string
+              example: De Jose a Denise
+              description: Body of the message
+            date:
+              type: string
+              example: 2023-01-13T04:38:17.338Z
+              description: Date when the message was created
+            file:
+              type: string
+              example: ""
+              description: Name of the file uploaded, If a file was uploaded
+    messageResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+          description: Error if is throw
+        body: 
+          type: object
+          properties:
+            chat:
+              type: string
+              example: 62be409df5252be57363a213
+              description: ID of the created chat which want to be send the message
+            user:
+              type: string
+              example: 62be3fa1f5252be57363a1ff
+              description: User who sends the message
+            message:
+              type: string
+              example: De Jose a Denise
+              description: Body of the message
+            date:
+              type: string
+              example: 2023-01-13T04:38:17.338Z
+              description: Date when the message was created
+            file:
+              type: string
+              example: ""
+              description: Name of the file uploaded, If a file was uploaded
+            
+    postMessage:
+      type: object
+      required:
+      - chat
+      - user
+      - message
+      properties:
+        chat:
+          type: string
+        user:
+          type: string
+        message:
+          type: string
+    userResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+        body: 
+          type: object
+          properties:
+            name:
+              type: string
+              example: Pepe
+              description: User's name in the database
+            _id:
+              type: string
+              example: 63bf80dcdc04a0039942c83a
+              description: Unique id of the user in the database
+            __v: 
+              type: number
+              example: 0
+    userRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          example: Pepe
+          description: Name of the user to be register in the app.
