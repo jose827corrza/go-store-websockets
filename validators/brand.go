@@ -15,7 +15,7 @@ func ValidateBrand(structure *dtos.BrandRequest, w http.ResponseWriter, r *http.
 	err := json.NewDecoder(r.Body).Decode(&structure)
 	log.Print(structure)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		return err
 	}
 	err = Validate.Struct(structure)
 	if err != nil {

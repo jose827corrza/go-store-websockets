@@ -151,26 +151,13 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 func MeHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
-		token, err := jwt.ParseWithClaims(tokenString, &models.AppClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return []byte(s.Config().JWTSecret), nil
-		})
+		userInfo, err, statusInt := utils.GetUserInfoByJWTToken(tokenString, s, r)
 		if err != nil {
-			utils.ErrorResponse(401, err.Error(), w)
-			// http.Error(w, err.Error(), http.StatusUnauthorized)
+			utils.ErrorResponse(statusInt, err.Error(), w)
 			return
 		}
-		if claims, ok := token.Claims.(*models.AppClaims); ok && token.Valid {
-			user, err := repository.GetUserById(r.Context(), claims.UserId)
-			if err != nil {
-				utils.ErrorResponse(500, err.Error(), w)
-				return
-			}
-
-			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(user)
-		} else {
-			utils.ErrorResponse(500, err.Error(), w)
-			return
-		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(statusInt)
+		json.NewEncoder(w).Encode(userInfo)
 	}
 }

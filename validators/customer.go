@@ -14,7 +14,7 @@ func ValidateCustomerSignUp(structure *dtos.SignUpCustomerRequest, w http.Respon
 	err := json.NewDecoder(r.Body).Decode(&structure)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		return err
 	}
 	err = Validate.Struct(structure)
 	if err != nil {

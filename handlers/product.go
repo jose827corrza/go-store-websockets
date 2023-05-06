@@ -18,6 +18,7 @@ func InsertProductHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request dtos.ProductRequest
 
+		tokenString := r.Header.Get("Authorization")
 		// // Validation
 		err := validators.ValidateCreateNewProduct(&request, w, r)
 		if err != nil {
@@ -25,6 +26,18 @@ func InsertProductHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		json.NewDecoder(r.Body).Decode(&request)
+
+		userInfo, err, status := utils.GetUserInfoByJWTToken(tokenString, s, r)
+		if err != nil {
+			utils.ErrorResponse(status, err.Error(), w)
+			return
+		}
+
+		if userInfo.Role != "administrator" {
+			utils.ErrorResponse(401, "You have no such priviledges", w)
+			return
+		}
+
 		// New uuid gen
 		id := uuid.New()
 		// hashedPsswrd, err := bcrypt.GenerateFromPassword([]byte(request.Password), 10)
@@ -130,7 +143,7 @@ func DeleteAProductHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusOK)
 		test := map[string]string{"status": "OK", "message": "Product deleted successfully", "productId": params["productId"]}
 		// utils.SuccessResponse(test,w)
 		json.NewEncoder(w).Encode(test)

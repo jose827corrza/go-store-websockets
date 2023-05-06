@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
@@ -68,17 +67,12 @@ func CheckAuthMiddleware(s server.Server) func(h http.Handler) http.Handler {
 				return
 			}
 			if claims, ok := token.Claims.(*models.AppClaims); ok && token.Valid {
-				user, err := repository.GetUserById(r.Context(), claims.UserId)
+				_, err := repository.GetUserById(r.Context(), claims.UserId)
 				if err != nil {
 					utils.ErrorResponse(500, err.Error(), w)
 					return
 				}
-				log.Print(user)
-				if !AdminPriviledges(r.Method, claims.Role) {
-					// next.ServeHTTP(w, r)
-					utils.ErrorResponse(401, err.Error(), w)
-					return
-				}
+
 			}
 			next.ServeHTTP(w, r)
 		})
