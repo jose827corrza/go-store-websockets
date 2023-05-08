@@ -15,9 +15,10 @@ type PostgresRepository struct {
 }
 
 func NewPostgresRepository(host string, user string, password string, dbName string, port string, sslMode string) (*PostgresRepository, error) {
-	dns := "host=localhost user=joseDev password=postgres dbname=go_estore port=5432 sslmode=disable"
-	fmt.Println(dns)
-	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
+	// dns := "host=localhost user=joseDev password=postgres dbname=go_estore port=5432 sslmode=disable"
+	dnsDeploy := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", host, user, password, dbName, port, sslMode)
+	fmt.Println(dnsDeploy)
+	db, err := gorm.Open(postgres.Open(dnsDeploy), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect to the DB")
 		return nil, err
