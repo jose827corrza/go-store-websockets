@@ -81,7 +81,8 @@ func (b *Broker) Run(binder func(s Server, r *mux.Router)) {
 	repository.SetRepository(repo)
 	repo.AutoDbUpdate()
 	fmt.Println("Starting the server at port", b.Config().Port)
-	err = http.ListenAndServe(b.config.Port, b.router)
+	portFixed := fmt.Sprintf(":%s", b.config.Port)
+	err = http.ListenAndServe(portFixed, b.router)
 	if err != nil {
 		log.Println("Error starting the server")
 	} else {
