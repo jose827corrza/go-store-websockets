@@ -1,0 +1,760 @@
+openapi: 3.0.3
+info:
+  title: GO store Websockets - OpenAPI 3.0
+  description: A simple instant message app using GO. All the info is stored in a Postgres DB, GORM ORM is used for the conn, a repository pattern is used for easy DB change. The endpoint are protected by a JWT protocol auth, and for the ones who are for create info  you must have administrator priviledges
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: jose.corrzadeveloper@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 0.0.1
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://localhost:5055
+tags:
+  - name: Users
+    description: Related to users.
+  - name: Products
+    description: Related to products.
+  - name: Customer
+    description: Related to customers.
+  - name: Brands
+    description: Related to Brands
+  - name: Categories
+    description:  Related to categories.
+  - name: Orders
+    description: Related to  the process of manage the shopping cart.
+
+paths:
+  /signup:
+    post:
+      tags:
+      - Users
+      summary: Creates an user
+      description: Sends the name of the new user, and will obtain the name besides the user's id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUserRequest'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserResponse' 
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '500':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /login:
+    post:
+      tags:
+      - Users
+      summary: Obtain a token for the user
+      description: Obtain a token for the user which is a JWT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUserRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxOGExNDVjZS02MTliLTRlYTAtODI4MS1lNTk0MTIxNmQzYjgiLCJyb2xlIjoiY3VzdG9tZXIiLCJleHAiOjE2ODMzMjMzNzN9.R0aEQRokPVnI2kfupBUmYr4rL-u37VWsvwwuFJCCpXU"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '500':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'  
+  /me:
+    get:
+      tags:
+      - Users
+      summary: Obtain user info
+      description: Obtain user information
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /users/{userId}:
+    get:
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+          description: User Id
+      tags:
+      - Users
+      summary: Obtain info of a specific user
+      description: Obtain info of a specific user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Get a list of all users.
+      description: Brings a list of all rows in the table users.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSchema'
+  /brands/create:
+    post:
+      tags:
+      - Brands
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+      summary: Create a new Brand for the products.
+      description: Creates a new record into the brands table in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/brandRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/brandResponse'
+        '400':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '401':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserUnauthorized'
+        '500':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /brands/{brandId}:
+    get:
+      tags:
+      - Brands 
+      parameters:
+        - in: path
+          name: brandId
+          required: true
+          schema:
+            type: string
+          description: Brand Id 
+      summary: Obtain all the product related to an specific brand
+      description: Obtain all the product related to an specific brand
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/brand'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '500':
+          description: internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /products/create:
+    post:
+      tags:
+      - Products
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+      summary: Create a product
+      description: Saves a row record into the products table in the database.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProduct' 
+      responses:
+        '201':
+          description: Created 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createProductResponse'
+        '400':
+          description: Created 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '401':
+          description: Created 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserUnauthorized'
+        '500':
+          description: Created 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /products:
+    get:
+      tags:
+      - Products
+      summary: Get all products.
+      description: Query for all the products in the table.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/createProductResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /products/{productId}:
+    put:
+      tags:
+      - Products
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: Product Id 
+      summary: Update a products.
+      description: Using unique id for the product, update the selected row record.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createProduct'
+      responses:
+        '201':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createProductResponse'
+        '400':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '401':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserUnauthorized'
+        '500':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+    delete:
+      tags:
+      - Products 
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          description: Product Id 
+      summary: Delete a products.
+      description: Deletes a selected row record.
+      responses:
+        '200':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createProductResponse'
+        '400':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '401':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserUnauthorized'
+        '500':
+          description: Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deletedProduct'
+  /categories/create:
+    post: 
+      tags:
+      - Categories
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+      summary: Create a category
+      description: Creates a new categry stored into the categories table.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/categoryRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/brandResponse'
+        '400':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserBadRequest'
+        '401':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createUserUnauthorized'
+        '500':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /categories:
+    get:
+      tags:
+      - Categories
+      summary: Get all categories.
+      description: Obtain a list of all the record of the categories table.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/categoryList'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalServerError'
+  /categories/{categoryId}:
+    get:
+      tags:
+      - Categories
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            type: string
+          description: Category Id 
+      summary: Get product of a category.
+      description: From a category' id, return all the product.
+      responses:
+        '200':
+          description: OK. 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productsByCategoryIdList'
+
+components:
+  schemas:
+    productsByCategoryIdList:
+      allOf:
+        - $ref: '#/components/schemas/Basic'
+        - $ref: '#/components/schemas/categoryRequest'
+        - type: object
+          properties:
+            products:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/Basic'
+                  - $ref: '#/components/schemas/productSchema'
+    
+    categoryList:
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/Basic'
+          - $ref: '#/components/schemas/categoryRequest'
+          - type: object
+            properties:
+              id:
+                type: string
+                description: unique id.
+
+
+    createProductResponse:
+      allOf:
+        - $ref: '#/components/schemas/createProduct'
+        - $ref: '#/components/schemas/Basic'
+    createProduct:
+      type: object
+      required:
+        - name
+        - image 
+        - description 
+        - price
+        - stock 
+        - brandId 
+        - categoryId
+      properties:
+        name:
+          type: string
+          description: Name of the new brand
+          example: Apple
+        image:
+          type: string
+          description: Image related to the new brand
+          example: image.com.co
+        description:
+          type: string
+          description: Description according the product
+          example: Random description.
+        price:
+          type: number
+          description: Products price.
+          example: 1900.5
+        stock:
+          type: integer
+          description: Ammount of available products in the store.
+          example: 100
+        brandId:
+          type: string
+          description: Brand id which the product belongs.
+        categoryId:
+          type: string
+          description: Category id which the product belongs.
+    brand:
+      allOf:
+        - $ref: '#/components/schemas/Basic'
+        - type: object
+          properties:
+            name:
+              type: string
+              description: Name of the new brand
+              example: Apple
+            id:
+              type: string
+              description: id of the new brand
+              example: 6abd422f-3b6f-4af1-a96d-efafef7cee66
+            image:
+              type: string
+              description: Image related to the new brand
+              example: image.com.co
+            products:
+              type: array
+              items:
+                $ref: '#/components/schemas/productSchema'
+    productSchema:
+        allOf:
+          - $ref: '#/components/schemas/Basic'
+          - $ref: '#/components/schemas/productBasic'
+    productBasic:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the new brand
+          example: Apple
+        id:
+          type: string
+          description: id of the new brand
+          example: 6abd422f-3b6f-4af1-a96d-efafef7cee66
+        image:
+          type: string
+          description: Image related to the new brand
+          example: image.com.co
+        description:
+          type: string
+          description: Description according the product
+          example: Random description.
+        price:
+          type: number
+          description: Products price.
+          example: 1900.5
+        stock:
+          type: integer
+          description: Ammount of available products in the store.
+          example: 100
+        brand:
+          type: string
+          description: Brand id which the product belongs.
+        category:
+          type: string
+          description: Category id which the product belongs.
+        OrderID:
+          type: string
+          example: null
+    brandResponse:
+      allOf:
+        - $ref: '#/components/schemas/Basic'
+        - type: object
+          properties:
+            name:
+              type: string
+              description: Name of the new brand
+              example: Apple
+            id:
+              type: string
+              description: id of the new brand
+              example: 6abd422f-3b6f-4af1-a96d-efafef7cee66
+            image:
+              type: string
+              description: Image related to the new brand
+              example: image.com.co
+            products:
+              type: string
+              description: List of product of the brand
+              example: null  
+    brandRequest:
+      type: object
+      required:
+        - name
+        - image
+      properties:
+        name:
+          type: string
+          description: Name of the new brand
+          example: Apple
+        image:
+          type: object
+          description: image URL where the brand's is.
+          example: www.image.motorola.com
+    categoryRequest:
+      type: object
+      required:
+        - name
+        - image
+      properties:
+        name:
+          type: string
+          description: Name of the new category
+          example: Apple
+        image:
+          type: object
+          description: image URL where the category's image is.
+          example: www.image.motorola.com
+    createUserRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: Email used to signup into the store
+          example: test@mail.com
+        password:
+          type: string
+          description: Password to be used every time to login
+          example: 123BestPsswrdEver
+    createUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for the user
+          example: 6abd422f-3b6f-4af1-a96d-efafef7cee66
+        email:
+          type: string
+          description: Email used to signup into the store
+          example: test@mail.com
+    createUserBadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message about the error
+          example: Bad request
+        status:
+          type: string
+          description: Status code
+          example: "400"
+    deletedProduct:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message about the error
+          example: Product deleted.
+        status:
+          type: string
+          description: Status code
+          example: "200"
+    createUserUnauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message about the error
+          example: Bad request
+        status:
+          type: string
+          description: Status code
+          example: "401"
+    internalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message about the error
+          example: Internal Server Error
+        status:
+          type: string
+          description: Status code
+          example: "500"
+    UserSchema:
+      type: object
+      properties:
+        ID:
+          type: integer
+          description: ID
+          example: 0
+        CreatedAt:
+          type: string
+          description: Date when the row was created into the database
+          example: "0001-01-01T00:00:00Z"
+        UpdatedAt:
+          type: string
+          description: Date when the row was updated into the database
+          example: "0001-01-01T00:00:00Z"
+        DeletedAt:
+          type: string
+          description: Date when the row was deleted into the database
+          example: "null"
+        id: 
+          type: string
+          description: uuid ID generated for the user
+          example: '18a145ce-619b-4ea0-8281-e5941216d3b8'
+        email:
+          type: string
+          description: Email used to signup into the store
+          example: test@mail.com
+        role:
+          type: string
+          description: Role which the user has into the store
+          example: administrator
+    Basic:
+      type: object
+      properties:
+        ID:
+          type: integer
+          description: ID
+          example: 0
+        CreatedAt:
+          type: string
+          description: Date when the row was created into the database
+          example: "0001-01-01T00:00:00Z"
+        UpdatedAt:
+          type: string
+          description: Date when the row was updated into the database
+          example: "0001-01-01T00:00:00Z"
+        DeletedAt:
+          type: string
+          description: Date when the row was deleted into the database
+          example: "null"
+    

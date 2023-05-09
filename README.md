@@ -1,5 +1,21 @@
 # GO STORE AND WEBSOCKETS
 
+This project works as a backend for a store, it has products, that has relations with brands and categories,
+also allows to create users with priviledges.
+
+For security JWT  protocol is used.
+
+## Documentation
+The documentation is stored in the following addres.
+
+[Swagger documentation](http://jose827corrza.github.io/go-store-websockets/ "Swagger documentation")
+
+## Deploy URL
+
+[Deploy](https://go-store-websockets-production.up.railway.app)
+
+
+
 #dependencies used and its reason
 
 > go get github.com/gorilla/mux
@@ -18,6 +34,10 @@ For environment variables, very important.
 
 This will ease the set of JWT protocol
 
+> go get github.com/lib/pq
+
+To enable the use of Postgres
+
 ## Development
 
 Make sure you have the .env file in your root folder, containing the requested variables avoiding the typos
@@ -29,3 +49,12 @@ To run the server locally, run the following command
 
 > go run main.go
 
+## Docker for Local
+
+To build the docker image, move to database folder and run the following commands
+
+> docker build . -t go-estore-websockets
+
+Next to it, to start the container, 
+
+> docker run -p 54321:5432 go-estore-websockets
