@@ -1,5 +1,21 @@
 # GO STORE AND WEBSOCKETS
 
+This project works as a backend for a store, it has products, that has relations with brands and categories,
+also allows to create users with priviledges.
+
+For security JWT  protocol is used.
+
+## Documentation
+The documentation is stored in the following addres.
+
+[Swagger documentation](http://jose827corrza.github.io/go-store-websockets/ "Swagger documentation")
+
+## Deploy URL
+
+[Deploy](https://go-store-websockets-production.up.railway.app)
+
+
+
 #dependencies used and its reason
 
 > go get github.com/gorilla/mux
