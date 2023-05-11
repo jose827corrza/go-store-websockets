@@ -44,6 +44,8 @@ func CreateNewCustomerHanlder(s server.Server) http.HandlerFunc {
 			User:     requestCustomer,
 		}
 
+		//Informs in websocket the new customer creation
+		s.Hub().BroadCast(requestCustomer, nil)
 		err = repository.InsertUser(r.Context(), &requestCustomer)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
