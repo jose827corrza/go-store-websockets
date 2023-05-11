@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	orm "github.com/jose827corrza/go-store-websockets/gorm"
 	"github.com/jose827corrza/go-store-websockets/repository"
+	"github.com/jose827corrza/go-store-websockets/websockets"
 )
 
 type Config struct {
@@ -25,16 +26,22 @@ type Config struct {
 
 type Server interface {
 	Config() *Config
+	Hub() *websockets.Hub
 }
 
 type Broker struct {
 	config *Config
 	router *mux.Router
+	hub    *websockets.Hub
 }
 
 // Method for Broker that return the configuration
 func (b *Broker) Config() *Config {
 	return b.config
+}
+
+func (b *Broker) Hub() *websockets.Hub {
+	return b.hub
 }
 
 // Method to Create a new Broker "Constructor" method
@@ -51,6 +58,7 @@ func NewServer(ctx context.Context, config *Config) (*Broker, error) {
 	b := &Broker{
 		config: config,
 		router: mux.NewRouter(),
+		hub:    websockets.NewHub(),
 	}
 	return b, nil
 }
@@ -78,6 +86,9 @@ func (b *Broker) Run(binder func(s Server, r *mux.Router)) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	go b.hub.Run()
+
 	repository.SetRepository(repo)
 	repo.AutoDbUpdate()
 	fmt.Println("Starting the server at port", b.Config().Port)

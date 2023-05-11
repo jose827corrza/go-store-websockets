@@ -139,6 +139,8 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 		// 	Value:      tokenString,
 		// }
 		// http.SetCookie(w, &cookie)
+		s.Hub().BroadCast(claims.UserId, nil)
+
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(dtos.LoginResponse{

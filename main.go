@@ -75,4 +75,6 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/orders/{customerId}", handlers.GetOrdersByCustomerIdHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/orders/add-item", handlers.AddAProductToAnOrderHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/orders/items/{orderId}", handlers.GetOrderByIdHandler(s)).Methods(http.MethodGet)
+
+	r.HandleFunc("/ws", s.Hub().WebsocketHandler)
 }
