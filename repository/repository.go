@@ -38,6 +38,13 @@ type UserRepository interface {
 	AddAProductToAnOrder(ctx context.Context, orderId string, productId string, orderItemId string) error
 	GetOrderById(ctx context.Context, orderId string) (*models.Order, error)
 
+	// POSTS
+	CreatePostUser(ctx context.Context, user *models.User) error
+	GetUserPostById(ctx context.Context, userId string) (*models.User, error)
+	CreatePost(ctx context.Context, Post *models.Post) error
+	GetAllPosts(ctx context.Context) ([]*models.Post, error)
+	GetAllPostsByUserId(ctx context.Context, userId string) ([]*models.User, error)
+
 	Close() error
 }
 
@@ -127,6 +134,27 @@ func AddAProductToAnOrder(ctx context.Context, orderId string, productId string,
 
 func GetOrderById(ctx context.Context, orderId string) (*models.Order, error) {
 	return implementation.GetOrderById(ctx, orderId)
+}
+
+// POSTS
+func CreatePostUser(ctx context.Context, user *models.User) error {
+	return implementation.CreatePostUser(ctx, user)
+}
+
+func CreatePost(ctx context.Context, post *models.Post) error {
+	return implementation.CreatePost(ctx, post)
+}
+
+func GetUserPostById(ctx context.Context, userId string) (*models.User, error) {
+	return implementation.GetUserPostById(ctx, userId)
+}
+
+func GetAllPosts(ctx context.Context) ([]*models.Post, error) {
+	return implementation.GetAllPosts(ctx)
+}
+
+func GetAllPostsByUserId(ctx context.Context, userId string) ([]*models.User, error) {
+	return implementation.GetAllPostsByUserId(ctx, userId)
 }
 
 func Close() error {

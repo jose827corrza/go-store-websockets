@@ -21,6 +21,7 @@ var (
 		"products",
 		"users",
 		"customers",
+		"posts",
 		"",
 	}
 )

@@ -5,6 +5,8 @@ also allows to create users with priviledges.
 
 For security JWT  protocol is used.
 
+New functions have been included, users registered as *postMaker* can now create new posts and everyone can see the posts inside the backend of the store.
+
 ## Documentation
 The documentation is stored in the following addres.
 
