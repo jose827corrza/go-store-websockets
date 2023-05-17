@@ -45,6 +45,12 @@ type UserRepository interface {
 	GetAllPosts(ctx context.Context) ([]*models.Post, error)
 	GetAllPostsByUserId(ctx context.Context, userId string) ([]*models.User, error)
 
+	// TASKS
+	CreateTask(ctx context.Context, task *models.Task) error
+	GetAllTasksByUserId(ctx context.Context, userId string) ([]*models.Task, error)
+	EditATaskByTaskId(ctx context.Context, taskId string) ([]*models.Task, error)
+	DeleteATaskByTaskId(ctx context.Context, taskId string) error
+
 	Close() error
 }
 
