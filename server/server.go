@@ -22,6 +22,7 @@ type Config struct {
 	Db_PSSWD  string
 	Db_USER   string
 	Db_NAME   string
+	SSL_MODE  string
 }
 
 type Server interface {
@@ -82,7 +83,8 @@ func (b *Broker) Run(binder func(s Server, r *mux.Router)) {
 		b.Config().Db_PSSWD,
 		b.Config().Db_NAME,
 		b.Config().Db_PORT,
-		"disable")
+		b.Config().SSL_MODE,
+	)
 	if err != nil {
 		log.Fatal(err)
 	}

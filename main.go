@@ -28,6 +28,7 @@ func main() {
 	DB_PSSWD := os.Getenv("DB_PSSWD")
 	DB_USER := os.Getenv("DB_USER")
 	DB_NAME := os.Getenv("DB_NAME")
+	DB_SSL_MODE := os.Getenv("SSL_MODE")
 
 	s, err := server.NewServer(context.Background(), &server.Config{
 		Port:      PORT,
@@ -38,6 +39,7 @@ func main() {
 		Db_PSSWD:  DB_PSSWD,
 		Db_USER:   DB_USER,
 		Db_NAME:   DB_NAME,
+		SSL_MODE:  DB_SSL_MODE,
 	})
 
 	if err != nil {
