@@ -11,18 +11,19 @@ type SubTask struct {
 
 type Task struct {
 	gorm.Model
+	Id          string
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	IsCompleted bool   `json:"isCompleted"`
-	Priority
-	SubTasks []SubTask
-	UserID   string // 1:N
+	Priority    int    `json:"priority"`
+	SubTasks    []SubTask
+	UserID      string // 1:N
 }
 
-type Priority byte
+// type Priority byte
 
-const (
-	Low Priority = iota
-	Medium
-	High
-)
+// const (
+// 	Low    Priority = 1
+// 	Medium          = 2
+// 	High            = 3
+// )

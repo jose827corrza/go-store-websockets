@@ -14,6 +14,8 @@ require (
 	gorm.io/gorm v1.25.0
 )
 
+require github.com/rs/cors v1.9.0 // indirect
+
 require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect

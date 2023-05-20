@@ -11,6 +11,7 @@ import (
 	orm "github.com/jose827corrza/go-store-websockets/gorm"
 	"github.com/jose827corrza/go-store-websockets/repository"
 	"github.com/jose827corrza/go-store-websockets/websockets"
+	"github.com/rs/cors"
 )
 
 type Config struct {
@@ -93,7 +94,8 @@ func (b *Broker) Run(binder func(s Server, r *mux.Router)) {
 	repo.AutoDbUpdate()
 	fmt.Println("Starting the server at port", b.Config().Port)
 	portFixed := fmt.Sprintf(":%s", b.config.Port)
-	err = http.ListenAndServe(portFixed, b.router)
+	handler := cors.Default().Handler(b.router)   // TEST
+	err = http.ListenAndServe(portFixed, handler) // b.router
 	if err != nil {
 		log.Println("Error starting the server")
 	} else {

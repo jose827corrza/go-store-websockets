@@ -82,5 +82,12 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/posts", handlers.GetAllPostsHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/posts/{userId}", handlers.GetAllPostsByUserIdHandler(s)).Methods(http.MethodGet)
 
+	// TASK
+	r.HandleFunc("/tasks/create", handlers.CreateTaskHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/tasks", handlers.GetAllTaskByUserIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/tasks/{taskId}", handlers.EditATaskByTaskId(s)).Methods(http.MethodPut)
+	r.HandleFunc("/tasks/{taskId}", handlers.DeleteATaskByTaskId(s)).Methods(http.MethodDelete)
+	r.HandleFunc("/tasks/{taskId}", handlers.CreateASubTaskForATaskHandler(s)).Methods(http.MethodPost)
+
 	r.HandleFunc("/ws", s.Hub().WebsocketHandler)
 }
