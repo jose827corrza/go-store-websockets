@@ -36,7 +36,7 @@ func (repo *PostgresRepository) AddAProductToAnOrder(ctx context.Context, orderI
 	}
 	log.Print(order.Items)
 	order.Items = append(order.Items, models.OrderItem{
-		Quantity:  2,
+		Quantity:  2, // TODO <- Set the quantities
 		ProductID: productId,
 		OrderID:   orderId,
 		Id:        orderItemId,

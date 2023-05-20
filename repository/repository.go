@@ -45,6 +45,13 @@ type UserRepository interface {
 	GetAllPosts(ctx context.Context) ([]*models.Post, error)
 	GetAllPostsByUserId(ctx context.Context, userId string) ([]*models.User, error)
 
+	// TASKS
+	CreateTask(ctx context.Context, task *models.Task) error
+	GetAllTasksByUserId(ctx context.Context, userId string) ([]*models.Task, error)
+	EditATaskByTaskId(ctx context.Context, taskId string, task *models.Task) (*models.Task, error)
+	DeleteATaskByTaskId(ctx context.Context, taskId string) error
+	CreateASubTask(ctx context.Context, subTask *models.SubTask, taskId string) (*models.Task, error)
+
 	Close() error
 }
 
@@ -155,6 +162,28 @@ func GetAllPosts(ctx context.Context) ([]*models.Post, error) {
 
 func GetAllPostsByUserId(ctx context.Context, userId string) ([]*models.User, error) {
 	return implementation.GetAllPostsByUserId(ctx, userId)
+}
+
+// TASKS
+
+func CreateTask(ctx context.Context, task *models.Task) error {
+	return implementation.CreateTask(ctx, task)
+}
+
+func GetAllTasksByUserId(ctx context.Context, userId string) ([]*models.Task, error) {
+	return implementation.GetAllTasksByUserId(ctx, userId)
+}
+
+func EditATaskByTaskId(ctx context.Context, taskId string, task *models.Task) (*models.Task, error) {
+	return implementation.EditATaskByTaskId(ctx, taskId, task)
+}
+
+func DeleteATaskByTaskId(ctx context.Context, taskId string) error {
+	return implementation.DeleteATaskByTaskId(ctx, taskId)
+}
+
+func CreateASubTask(ctx context.Context, subTask *models.SubTask, taskId string) (*models.Task, error) {
+	return implementation.CreateASubTask(ctx, subTask, taskId)
 }
 
 func Close() error {

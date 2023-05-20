@@ -38,6 +38,8 @@ func (repo *PostgresRepository) AutoDbUpdate() {
 		&models.Order{},
 		// &models.UserPost{},
 		&models.Post{},
+		&models.Task{},
+		&models.SubTask{},
 	)
 }
 
