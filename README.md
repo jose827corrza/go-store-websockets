@@ -45,11 +45,12 @@ To enable the use of Postgres
 Make sure you have the .env file in your root folder, containing the requested variables avoiding the typos
 you can guide with the .env.example file.
 
-**VERY IMPORTANT TO NOTE THAT THE PORT CURRENTLY IS RECEIVING A STRING, WHICH ALSO NEEDS BESIDES THE PORT NUMBER, THE ":". THIS CAN BE SOLVED/IMPROVED IN A FUTURE**
 
 To run the server locally, run the following command
 
 > go run main.go
+
+**CHECK THE REQUIRED VALUES IN THE .env FILE, GUIDE USING THE .env.example**
 
 ## Docker for Local
 
