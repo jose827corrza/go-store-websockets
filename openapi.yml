@@ -8,12 +8,12 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 0.0.1
+  version: 0.0.2
 externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-  - url: https://go-store-websockets-production.up.railway.app
+  - url: https://go-estore.onrender.com
 tags:
   - name: Users
     description: Related to users.
